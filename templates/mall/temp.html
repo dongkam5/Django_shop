@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+{% for stuff in stuffs %}
+    <div class="card stuff mx-4" style="width: 18rem;">
+      <div class="col">
+    <div class="card">
+  <img src="https://cdn.dominos.co.kr/admin/upload/goods/20200311_x8StB1t3.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+    <h5 class="card-title">{{ stuff.name }}</h5>
+    <p class="card-text">{{ stuff.price }} $</p>
+  </div>
+  <div class="card-body">
+      <a href="{% url 'mall:detail' stuff.id %}" class="card-link">BUY</a>
+      <a href="{% url 'mall:detail' stuff.id %}" class="card-link">ADD CART</a>
+      <a href="{% url 'mall:detail' stuff.id %}" class="card-link">Detail</a>
+  </div>
+    </div>
+  </div>
+    </div>
+{% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static%}
+{% block link%}
+<link rel="stylesheet" type="text/css" href="{% static 'mall/indexStyle.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+{% for stuff in stuffs %}
+    <div class="card stuff mx-4" style="width: 18rem;">
+      <div class="col">
+    <div class="card">
+  <img src="/media/{{stuff.image}}" class="card-img-top" alt="...">
+        <div class="card-body">
+    <h5 class="card-title">{{ stuff.name }}</h5>
+    <p class="card-text">{{ stuff.price }} $</p>
+  </div>
+  <div class="card-body">
+      <a href="{% url 'mall:addcart' stuff.id %}" class="card-link badge bg-primary" style="text-decoration-line: none;">BUY</a>
+      <a href="{% url 'mall:addcart' stuff.id %}" class="card-link badge bg-primary" style="text-decoration-line: none;">ADD CART</a>
+      <a href="{% url 'mall:detail' stuff.id %}" class="card-link badge bg-primary" style="text-decoration-line: none;">Detail</a>
+  </div>
+    </div>
+  </div>
+    </div>
+{% endfor %}
+    </div>
+{% endblock %}

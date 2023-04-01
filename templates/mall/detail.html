@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block link%}
+<link rel="stylesheet" type="text/css" href="{% static 'mall/detailStyle.css' %}">
+{% endblock %}
+{% block content %}
+{% if stuff %}
+    <div class="card mb-3">
+      <img src="/media/{{stuff.image}}" class="card-img-top h-25 w-25" alt="...">
+  <!-- <img src="https://cdn.dominos.co.kr/admin/upload/goods/20200311_x8StB1t3.jpg" class="card-img-top h-25 w-25" alt="..."> -->
+  <div class="card-body">
+    <h5 class="card-title form-label">{{stuff.name}}</h5>
+    <p class="card-text form-control">{{ stuff.detail }}</p>
+          <p class="card-text form-label">{{ stuff.price }} $</p>
+    <p class="card-text"><small class="text-muted">Last updated at {{stuff.pub_date}}</small></p>
+  </div>
+</div>
+    {% endif %}
+{% endblock %}
