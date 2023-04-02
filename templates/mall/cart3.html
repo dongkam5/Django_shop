@@ -17,12 +17,24 @@
         for (let i=0;i<len;i++){
             element=list_.item(i)
             if (element.checked)
-            result+=parseInt(element.value)
+            result+=parseInt(document.getElementById('stuff_quantity').innerText)*parseInt(document.getElementById('stuff_price').innerText)
             }
         
         // 출력
         document.getElementById('sum').innerText
           = result;
+      }
+      function plusStuff(){
+        quantity=parseInt(document.getElementById('stuff_quantity').innerText);
+          quantity+=1;
+          document.getElementById('stuff_quantity').innerText=quantity;
+          getCheckboxValue();
+      }
+      function minusStuff(){
+        quantity=parseInt(document.getElementById('stuff_quantity').innerText);
+          quantity-=1;
+          document.getElementById('stuff_quantity').innerText=quantity;
+          getCheckboxValue();
       }
       window.onload=function(){
         getCheckboxValue()
@@ -52,53 +64,36 @@
           <tr>
             {% if stuff.checked %}
             <th scope="row"><div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="{% widthratio stuff.stuffs.price 1 stuff.quantity %}" id="flexCheckDefault" onclick=getCheckboxValue() checked>
-                </div></th>
+                <input class="form-check-input" type="checkbox" value="{% widthratio stuff.stuffs.price 1 stuff.quantity %}" id="flexCheckDefault" onclick=getCheckboxValue() checked>
+              </div></th>
             {%else%}
-            <div class="form-check">
+            <th scope="row"><div class="form-check">
                 <input class="form-check-input " type="checkbox" value="{% widthratio stuff.stuffs.price 1 stuff.quantity %}" id="flexCheckDefault" onclick=getCheckboxValue()>
               </div></th>
             {% endif %}
             <th>{{forloop.counter}}</th>
-            <td >{{ stuff.stuffs.name }}</td>
-            <td>{{stuff.stuffs.price}}$</td>
-            <td>{{ stuff.quantity}} </td>
-        <td><form method="post" action="{% url 'mall:plusStuff' stuff.stuffs.id %}">
-            {% csrf_token %}
+            <td id="stuff_name">{{ stuff.stuffs.name }}</td>
+            <td id="stuff_price">{{stuff.stuffs.price}}</td>
+            <td id="stuff_quantity">{{ stuff.quantity}} </td>
+        <td>
             <button  class="btn btn-outline-primary"
-        style="--bs-btn-font-size: .1rem; border: none;" >
+        style="--bs-btn-font-size: .1rem; border: none;" onclick=plusStuff(this)>
         ➕
 </button>
-        </form>
-        <form method="post" action="{% url 'mall:minusStuff' stuff.stuffs.id %}" >
-            {% csrf_token %}
             <button  class="btn btn-outline-primary"
-        style=" --bs-btn-font-size: .1rem; border: none;">
+        style=" --bs-btn-font-size: .1rem; border: none;" onclick=minusStuff(this)>
         ➖
-</button>
-        </form></td>
-            <td>{% widthratio stuff.stuffs.price 1 stuff.quantity %}$</td>
+</button></td>
+            <td>{% widthratio stuff.stuffs.price 1 stuff.quantity %}</td>
             <td><form method="post" action="{% url 'mall:subCart' stuff.stuffs.id %}" >
                 {% csrf_token %}
                 <button class="card-link badge bg-secondary"> X </button>
             </form></td>
           </tr>
           {% endfor %}
-          <th scope="row"></th>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><span id="sum"></span>$</td>
-          <td>      <form action="{url 'mall:buy'}">
-                <button class="btn btn-primary" type="button">BUY</button>
-          </form></td>
-          
         </tbody>
       </table>
-
-
+      ALL:<span id="sum"></span>$
   </div>
 </div>
         {% else %}

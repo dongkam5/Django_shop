@@ -19,5 +19,6 @@ class Cart(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     stuffs=models.ForeignKey(Stuff,on_delete=models.CASCADE)
     quantity=models.IntegerField(default=0)
+    checked=models.BooleanField(default=False)
     def __str__(self):
         return self.user.username +' '+ self.stuffs.name

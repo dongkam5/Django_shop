@@ -3,21 +3,22 @@
 ## 구현 기능
 - 상품 목록 표시 O
 - 로그인/로그아웃 O  
-- 회원별 개인 장바구니 확인/삭제/수정 기능 --구현중--
-- 주문/ 주문현황확인 기능 --미구현--
+- 회원별 개인 장바구니 확인/삭제/수정 기능 O
+- 주문/ 주문현황확인 기능 --구현중--
 - 개인 정보 확인 O
 - 회원가입 O
  
 
 ## 문제
-- 위 문제가 해결되면 각 유저별 카트(장바구니)에서 장바구니 목록 개수 변경이 가능하도록 수정
+- 주문 현황 확인 기능
+- 버튼 클릭시 화면이 계속 reload 됨
 
 ### 해결
 - Cart.Stuffs 가 꼭 1개 이상의 필드를 가져야만 하는지? (Add Cart도 개선필요)
 --> get 말고, filter를 사용해서 해결
 
 - 장바구니 담을 때 개수 화면 출력
---> Stuff에 quantity 필드를 추가하여 해결
+--> Cart에 quantity 필드를 추가하여 해결
 
 - 유저 생성할때 같이 Cart 인스턴스도 생성 
 --> Cart.create 함수를 통해 해결, Stuff는 Cart 생성 후 추가하는 방식으로 구현 --> 각 Cart별로 사용자, 물건 명, 개수를 담도록 설정
@@ -46,3 +47,25 @@
 
 - views의 cart2 addcart2와 templates의 cart2.html 을 수정하여 완성
 --> 이용하여 생성하고, 다시 원상태로 복귀 시킴
+
+- 장고 template에서 곱셈 및 나눗셈
+--> You can use widthratio builtin filter for multiplication and division.
+
+To compute A*B: {% widthratio A 1 B %}
+
+To compute A/B: {% widthratio A B 1 %}
+
+- 위 문제가 해결되면 각 유저별 카트(장바구니)에서 장바구니 목록 개수 변경이 가능하도록 수정
+--> 버튼을 이용하여 장바구니 목록 개수 수정 가능하도록 변경
+
+- 장바구니 글자 세로 가운데 정렬
+--> text align, vertical align 이용하여 해결
+
+- 장바구니에서 목록별 체크박스 생성 
+--> 체크박스 생성 (default=False)
+
+- 주문 기능 구현 시, 홈 화면에서 buy 버튼 누르면 체크 되어 있게
+--> 홈화면에서 buy를 클릭해서 들어가면 checked 되어있도록 설정
+
+- 체크박스 활성/비활성 시, 총액에는 체크 된 상품들의 합만 출력 되도록
+--> JS onclick 이벤트 리스너를 이용하여 해결

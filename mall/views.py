@@ -49,12 +49,15 @@ def addCart(request,stuff_id):
     for uCart2 in uCart:
         if uCart2.stuffs.id==stuff_id:
             uCart2.quantity+=1
+            uCart2.checked=True
             uCart2.save()
             break
     else:
         uCart2=Cart.objects.create(user=request.user,stuffs=stuff)
         uCart2.quantity+=1
+        uCart2.checked=True
         uCart2.save()
+        
     return  redirect('mall:cart')
 
 @login_required(login_url='common:login')
@@ -66,6 +69,43 @@ def subCart(request,stuff_id):
             break
     return  redirect('mall:cart')
 
+@login_required(login_url='common:login')
+def plusStuff(request,stuff_id):
+    uCart=Cart.objects.filter(user=request.user)
+    for uCart2 in uCart:
+        if uCart2.stuffs.id==stuff_id:
+            uCart2.quantity+=1
+            uCart2.save()
+            break
+    return  redirect('mall:cart')
+
+@login_required(login_url='common:login')
+def minusStuff(request,stuff_id):
+    uCart=Cart.objects.filter(user=request.user)
+    for uCart2 in uCart:
+        if uCart2.stuffs.id==stuff_id:
+            uCart2.quantity-=1
+            uCart2.save()
+            if uCart2.quantity==0:
+                uCart2.delete()
+            break
+    return  redirect('mall:cart')
 
 
+@login_required(login_url='common:login')
+def buyAtIndex(request,stuff_id):
+    uCart=Cart.objects.filter(user=request.user)
+    stuff=Stuff.objects.get(id=stuff_id)
+    for uCart2 in uCart:
+        if uCart2.stuffs.id==stuff_id:
+            uCart2.quantity+=1
+            uCart2.checked=True
+            uCart2.save()
+            break
+    else:
+        uCart2=Cart.objects.create(user=request.user,stuffs=stuff)
+        uCart2.quantity+=1
+        uCart2.checked=True
+        uCart2.save()
+    return  redirect('mall:cart')
 

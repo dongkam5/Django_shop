@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block link%}
+<link rel="stylesheet" type="text/css" href="{% static 'cart/cartStyle.css' %}">
+{% endblock %}
 {% block content %}
     {% if stuffs %}
 <div class="card">
@@ -9,23 +13,56 @@
     <table class="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
             <th scope="col">Goods</th>
             <th scope="col">Price</th>
             <th scope="col">Count</th>
+            <th scope="col"> </th>
+            <th scope="col">PriceSum</th>
+            <th scope="col"> </th>
           </tr>
         </thead>
         <tbody>
             {% for stuff in stuffs %}
           <tr>
-            <th scope="row">{{forloop.counter}}</th>
-            <td>{{ stuff.stuffs.name }}</td>
+            {% if stuff.checked %}
+            <th scope="row"><div class="form-check">
+                <input class="form-check-input " type="checkbox" value="" id="flexCheckDefault" checked>
+              </div></th>
+            {%else%}
+            <th scope="row"><div class="form-check">
+                <input class="form-check-input " type="checkbox" value="" id="flexCheckDefault">
+              </div></th>
+            {% endif %}
+            <th>{{forloop.counter}}</th>
+            <td >{{ stuff.stuffs.name }}</td>
             <td>{{stuff.stuffs.price}}</td>
-            <td>{{ stuff.quantity}}</td>
+            <td>{{ stuff.quantity}} </td>
+        <td><form method="post" action="{% url 'mall:plusStuff' stuff.stuffs.id %}">
+            {% csrf_token %}
+            <button  class="btn btn-outline-primary"
+        style="--bs-btn-font-size: .1rem; border: none;" >
+        ➕
+</button>
+        </form>
+        <form method="post" action="{% url 'mall:minusStuff' stuff.stuffs.id %}" >
+            {% csrf_token %}
+            <button  class="btn btn-outline-primary"
+        style=" --bs-btn-font-size: .1rem; border: none;">
+        ➖
+</button>
+        </form></td>
+            <td>{% widthratio stuff.stuffs.price 1 stuff.quantity %}</td>
+            <td><form method="post" action="{% url 'mall:subCart' stuff.stuffs.id %}" >
+                {% csrf_token %}
+                <button class="card-link badge bg-secondary"> X </button>
+            </form></td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
+      ALL: {{sum}}$
   </div>
 </div>
         {% else %}
@@ -39,4 +76,3 @@
 </div>
     {% endif %}
 {% endblock %}
-
