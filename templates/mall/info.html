@@ -10,5 +10,37 @@
 {#    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>#}
   </div>
 </div>
-{#    <a href="{% url 'mall:index' %}" class="btn btn-secondary">Home</a>#}
+<p></p>
+{% if buyStuff %}
+<div class="card">
+  <div class="card-header">
+    Order List
+  </div>
+  <div class="card-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Goods</th>
+          <th scope="col">Price</th>
+          <th scope="col">Count</th>
+          <th scope="col">PriceSum</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stuff in buyStuff%}
+        <th>{{forloop.counter}}</th>
+        <td>{{ stuff.stuffs.name }}</td>
+        <td>{{stuff.stuffs.price}}$</td>
+        <td>{{ stuff.quantity}} </td>
+        <td>{% widthratio stuff.stuffs.price 1 stuff.quantity %}$</td>
+        </tbody>
+  {% endfor %}
+    </table>
+  PLEASE SEND {{total}}$ AT xxxx-xx-xxxxxxx Kakao Bank
+</div>
+</div>
+
+{% endif %}
 {% endblock %}
+

@@ -109,3 +109,15 @@ def buyAtIndex(request,stuff_id):
         uCart2.save()
     return  redirect('mall:cart')
 
+
+@login_required(login_url='common:login')
+def buy(request):
+    total=0
+    buyStuff=[]
+    uCarts=Cart.objects.filter(user=request.user)
+    for uCart in uCarts:
+        if uCart.checked:
+            total+=(uCart.stuffs.price*uCart.quantity)
+            buyStuff.append(uCart)
+    context={'buyStuff':buyStuff,'total':total,'username':request.user.username,'email':request.user.email}
+    return  render(request,'mall/info.html',context)

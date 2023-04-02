@@ -91,14 +91,14 @@
           <td></td>
           <td></td>
           <td><span id="sum"></span>$</td>
-          <td>      <form action="{url 'mall:buy'}">
-                <button class="btn btn-primary" type="button">BUY</button>
+          <td>                  
+            <form method="post" action="{% url 'mall:buy' %}" >
+            {% csrf_token %}
+              <button class="btn btn-primary">BUY</button>
           </form></td>
           
         </tbody>
       </table>
-
-
   </div>
 </div>
         {% else %}
