@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from datetime import datetime,timedelta
 # Create your views here.
 
 def index(request):
@@ -20,7 +21,7 @@ def detail(request,stuff_id):
 def register(request):
     if request.method=="POST":
         stuff=Stuff(name=request.POST.get('name'),price=request.POST.get('price'),detail=request.POST.get('detail'),image=request.FILES.get('image'))
-        stuff.pub_date=timezone.now()
+        stuff.pub_date=timezone.now()+timedelta(hours=9)
         stuff.save()
         return redirect('mall:index')
     else:
@@ -36,24 +37,35 @@ def info(request):
 
 @login_required(login_url='common:login')
 def cart(request):
-    if Cart.objects.filter(pk=request.user.id):
-        order=Cart.objects.get(pk=request.user.id)
-        stuffs=order.stuffs.all()
-        context={'stuffs':stuffs}
-    else:
-        context={'stuffs':''}
-    return render(request,'mall/cart.html',context)
+    uCart=Cart.objects.filter(user=request.user)
+    stuffs=uCart
+    context={'stuffs':stuffs}
+    return render(request,'mall/cart2.html',context)
 
 @login_required(login_url='common:login')
 def addCart(request,stuff_id):
-    if Cart.objects.filter(pk=request.user.id):
-        thisCart=Cart.objects.get(pk=request.user.id)
+    uCart=Cart.objects.filter(user=request.user)
+    stuff=Stuff.objects.get(id=stuff_id)
+    for uCart2 in uCart:
+        if uCart2.stuffs.id==stuff_id:
+            uCart2.quantity+=1
+            uCart2.save()
+            break
     else:
-        thisCart=Cart.objects.create(user=request.user,pk=request.user.id)
-    # stuff=Stuff.objects.get(id=stuff_id) 
-    stuff=thisCart.stuffs.get(id=stuff_id)
-    stuff.quantity+=1
-    stuff.save()
-    thisCart.stuffs.add(stuff)
-    thisCart.save()
+        uCart2=Cart.objects.create(user=request.user,stuffs=stuff)
+        uCart2.quantity+=1
+        uCart2.save()
     return  redirect('mall:cart')
+
+@login_required(login_url='common:login')
+def subCart(request,stuff_id):
+    uCart=Cart.objects.filter(user=request.user)
+    for uCart2 in uCart:
+        if uCart2.stuffs.id==stuff_id:
+            uCart2.delete()
+            break
+    return  redirect('mall:cart')
+
+
+
+

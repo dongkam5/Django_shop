@@ -17,10 +17,7 @@ class Stuff(models.Model):
 
 class Cart(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
-    stuffs=models.ManyToManyField(Stuff)
-    # quantity=models.JSONField()
+    stuffs=models.ForeignKey(Stuff,on_delete=models.CASCADE)
+    quantity=models.IntegerField(default=0)
     def __str__(self):
-        return self.user.username
-
-    def get_username(self):
-        return self.user.username
+        return self.user.username +' '+ self.stuffs.name

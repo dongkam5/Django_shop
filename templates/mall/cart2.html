@@ -13,6 +13,7 @@
             <th scope="col">Goods</th>
             <th scope="col">Price</th>
             <th scope="col">Count</th>
+            <th scope="col"> </th>
           </tr>
         </thead>
         <tbody>
@@ -22,6 +23,10 @@
             <td>{{ stuff.stuffs.name }}</td>
             <td>{{stuff.stuffs.price}}</td>
             <td>{{ stuff.quantity}}</td>
+            <td><form method="post" action="{% url 'mall:subCart' stuff.stuffs.id %}" >
+                {% csrf_token %}
+                <button class="card-link badge bg-secondary"> X </button>
+            </form></td>
           </tr>
           {% endfor %}
         </tbody>
