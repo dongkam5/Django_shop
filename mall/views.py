@@ -30,16 +30,19 @@ def register(request):
 
 @login_required(login_url='common:login')
 def info(request):
-    orderlists=Order.objects.filter(user=request.user)
+    orders=Order.objects.filter(user=request.user)
     pub_times=[]
-    orders=[]
-    for orderlist in orderlists:
-        pub_times.append(orderlist.order_date)
+    orderlists=[]
+    for order in orders:
+        pub_times.append(order.order_date)
     pub_times=list(set(pub_times))
     for pub_time in pub_times:
-        orderlists=Order.objects.filter(order_date=pub_time)
-        orders.append(orderlists)
-    context={'orderlists':orders,'username':request.user.username,'email':request.user.email}
+        total=0
+        orders=Order.objects.filter(order_date=pub_time)
+        for order in orders:
+            total+=order.subtotal
+        orderlists.append([orders,total])
+    context={'orderlists':orderlists,'username':request.user.username,'email':request.user.email}
     return render(request,'mall/info.html',context)
 
 @login_required(login_url='common:login')
@@ -123,22 +126,25 @@ def buy(request):
                 stuff_name = request.POST[uCart.stuffs.name]
                 stuff=Stuff.objects.get(name=stuff_name)
                 uCart=Cart.objects.get(user=request.user,stuffs=stuff)
-                orderlist=Order.objects.create(user=request.user,list=uCart,order_date=order_date)
+                orderlist=Order.objects.create(user=request.user,stuff=uCart.stuffs,order_date=order_date,quantity=uCart.quantity)
                 orderlist.save()
                 subtotal=uCart.quantity*uCart.stuffs.price
                 orderlist.subtotal=subtotal
                 orderlist.save()
 
-        orderlists=Order.objects.filter(user=request.user)
+        orders=Order.objects.filter(user=request.user)
         pub_times=[]
-        orders=[]
-        for orderlist in orderlists:
-            pub_times.append(orderlist.order_date)
+        orderlists=[]
+        for order in orders:
+            pub_times.append(order.order_date)
         pub_times=list(set(pub_times))
         for pub_time in pub_times:
-            orderlists=Order.objects.filter(order_date=pub_time)
-            orders.append(orderlists)
-        context={'orderlists':orders,'username':request.user.username,'email':request.user.email}
+            orders=Order.objects.filter(order_date=pub_time)
+            total=0
+            for order in orders:
+                total+=order.subtotal
+            orderlists.append([orders,total])
+        context={'orderlists':orderlists,'username':request.user.username,'email':request.user.email}
     else:
         context={'username':request.user.username,'email':request.user.email}
     return  render(request,'mall/info.html',context)

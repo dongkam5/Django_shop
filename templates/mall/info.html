@@ -28,18 +28,18 @@
         </tr>
       </thead>
       <tbody>
-        {% for order in orders %}
+        {% for order in orders.0 %}
         <tr>
         <th scope="row">{{forloop.counter}}</th>
-        <td>{{ order.list.stuffs.name }}</td>
-        <td>{{order.list.stuffs.price}}$</td>
-        <td>{{ order.list.quantity}} </td>
-        <td>{% widthratio order.list.stuffs.price 1 order.list.quantity %}$</td>
+        <td>{{ order.stuff.name }}</td>
+        <td>{{order.stuff.price}}$</td>
+        <td>{{order.quantity}} </td>
+        <td>{% widthratio order.stuff.price 1 order.quantity %}$</td>
       </tr>{% endfor %}
         </tbody>
     </table>
-    <small class="text-muted">Ordered At {{orders.0.order_date}}</small><br>
-    <small class="text-muted">SEND {{0}}$</small> <br> 
+    <small class="text-muted">Ordered At {{orders.0.0.order_date}}</small><br>
+    <small class="text-muted">SEND {{orders.1}}$</small> <br> 
     <small class="text-muted">xxxx-xx-xxxxxxx Kakao Bank</small>
 </div>
 </div>

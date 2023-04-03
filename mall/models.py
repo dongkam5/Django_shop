@@ -24,9 +24,10 @@ class Cart(models.Model):
     
 class Order(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
-    list=models.ForeignKey(Cart,on_delete=models.CASCADE)
+    stuff=models.ForeignKey(Stuff,on_delete=models.CASCADE)
+    quantity=models.IntegerField(default=0)
     order_date=models.DateTimeField()
     subtotal=models.IntegerField(default=0)
 
     def __str__(self):
-        return self.user.username + ' ' + self.list.stuffs.name+' '+str(self.order_date)
+        return self.user.username + ' ' + self.stuff.name+' '+str(self.order_date)
