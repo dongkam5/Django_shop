@@ -10,14 +10,25 @@
         const list_=document.getElementsByClassName('form-check-input');
         document.getElementById('sum').innerText
           = list_;  
-          
+        const buyStuff=document.getElementById('buyStuff');
         // 선택된 목록에서 value 찾기
         let result = parseInt(0);
         let len = list_.length;
+        let check=false;
+        buyStuff.innerHTML='';
         for (let i=0;i<len;i++){
             element=list_.item(i)
             if (element.checked)
+            {
+            let hidden_val=document.createElement('input');
+            hidden_val.setAttribute("type", "hidden");
+            hidden_val.value=element.name;
+            hidden_val.name=element.name;
+            hidden_val.checked=true;
+            buyStuff.appendChild(hidden_val);
             result+=parseInt(element.value)
+            check=true
+            }
             }
         
         // 출력
@@ -52,11 +63,11 @@
           <tr>
             {% if stuff.checked %}
             <th scope="row"><div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="{% widthratio stuff.stuffs.price 1 stuff.quantity %}" id="flexCheckDefault" onclick=getCheckboxValue() checked>
+                    <input class="form-check-input" type="checkbox" name="{{stuff.stuffs.name}}" value="{% widthratio stuff.stuffs.price 1 stuff.quantity %}" id="flexCheckDefault" onclick=getCheckboxValue() checked>
                 </div></th>
             {%else%}
             <div class="form-check">
-                <input class="form-check-input " type="checkbox" value="{% widthratio stuff.stuffs.price 1 stuff.quantity %}" id="flexCheckDefault" onclick=getCheckboxValue()>
+                <input class="form-check-input " type="checkbox" name="{{stuff.stuffs.name}}" value="{% widthratio stuff.stuffs.price 1 stuff.quantity %}" id="flexCheckDefault" onclick=getCheckboxValue()>
               </div></th>
             {% endif %}
             <th>{{forloop.counter}}</th>
@@ -92,8 +103,11 @@
           <td></td>
           <td><span id="sum"></span>$</td>
           <td>                  
-            <form method="post" action="{% url 'mall:buy' %}" >
+            <form method="post" action="{% url 'mall:buy' %}">
             {% csrf_token %}
+            <div id="buyStuff">
+
+            </div>
               <button class="btn btn-primary">BUY</button>
           </form></td>
           

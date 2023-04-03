@@ -10,9 +10,7 @@
  
 
 ## 문제
-- buy 시 체크박스 체크여부도 전달
 - buy에 관한 모델 생성
-- 버튼 클릭시 화면이 계속 reload 됨
 
 ### 해결
 - Cart.Stuffs 가 꼭 1개 이상의 필드를 가져야만 하는지? (Add Cart도 개선필요)
@@ -73,3 +71,11 @@ To compute A/B: {% widthratio A B 1 %}
 
 - 주문 현황 확인 기능
 --> checked 된 목록을 info.html에 전달하여 표시
+
+- buy 시 체크박스 체크여부도 전달
+--> JS를 통해서 buy 버튼을 누를 시, 체크여부도 전달되도록 구성
+
+- request.POST.get(uCart.stuffs.name)을 이용하면, 값이 없는경우에 오류를 반환하지 않고, None 값을 리턴함
+
+- 버튼 클릭시 화면이 계속 reload 됨
+--> JS를 통해 화면을 reload 하지 않고, 값을 변경하도록 수정

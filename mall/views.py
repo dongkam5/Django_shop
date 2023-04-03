@@ -40,7 +40,7 @@ def cart(request):
     uCart=Cart.objects.filter(user=request.user)
     stuffs=uCart
     context={'stuffs':stuffs}
-    return render(request,'mall/cart2.html',context)
+    return render(request,'mall/cart3.html',context)
 
 @login_required(login_url='common:login')
 def addCart(request,stuff_id):
@@ -114,10 +114,21 @@ def buyAtIndex(request,stuff_id):
 def buy(request):
     total=0
     buyStuff=[]
-    uCarts=Cart.objects.filter(user=request.user)
-    for uCart in uCarts:
-        if uCart.checked:
-            total+=(uCart.stuffs.price*uCart.quantity)
-            buyStuff.append(uCart)
-    context={'buyStuff':buyStuff,'total':total,'username':request.user.username,'email':request.user.email}
+    if request.method == 'POST':
+        uCarts=Cart.objects.filter(user=request.user)
+        for uCart in uCarts:
+            if request.POST.get(uCart.stuffs.name):
+                stuff_name = request.POST[uCart.stuffs.name]
+                stuff=Stuff.objects.get(name=stuff_name)
+                uCart=Cart.objects.get(user=request.user,stuffs=stuff)
+                total+=uCart.quantity*uCart.stuffs.price
+                buyStuff.append(uCart)
+        # for uCart in uCarts:
+        #     if request.POST[uCart.stuffs.name]:
+        #         stuff_value = request.POST[uCart.stuffs.name]
+        #         total+=int(stuff_value)
+        #         buyStuff.append(uCart)
+        context={'buyStuff':buyStuff,'total':total,'username':request.user.username,'email':request.user.email}
+    else:
+        context={'username':request.user.username,'email':request.user.email}
     return  render(request,'mall/info.html',context)

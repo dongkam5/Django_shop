@@ -22,3 +22,11 @@ class Cart(models.Model):
     checked=models.BooleanField(default=False)
     def __str__(self):
         return self.user.username +' '+ self.stuffs.name
+    
+class Order(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    list=models.ForeignKey(Cart,on_delete=models.CASCADE)
+    order_date=models.DateField()
+
+    def __str__(self):
+        return self.user.username + ' ' + self.order_date
