@@ -19,14 +19,14 @@ class Cart(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     stuffs=models.ForeignKey(Stuff,on_delete=models.CASCADE)
     quantity=models.IntegerField(default=0)
-    checked=models.BooleanField(default=False)
     def __str__(self):
         return self.user.username +' '+ self.stuffs.name
     
 class Order(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     list=models.ForeignKey(Cart,on_delete=models.CASCADE)
-    order_date=models.DateField()
+    order_date=models.DateTimeField()
+    subtotal=models.IntegerField(default=0)
 
     def __str__(self):
-        return self.user.username + ' ' + self.order_date
+        return self.user.username + ' ' + self.list.stuffs.name+' '+str(self.order_date)

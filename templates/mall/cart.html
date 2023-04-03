@@ -4,6 +4,41 @@
 <link rel="stylesheet" type="text/css" href="{% static 'cart/cartStyle.css' %}">
 {% endblock %}
 {% block content %}
+<script>
+    function getCheckboxValue()  {
+        // 선택된 목록 가져오기
+        const list_=document.getElementsByClassName('form-check-input');
+        document.getElementById('sum').innerText
+          = list_;  
+        const buyStuff=document.getElementById('buyStuff');
+        // 선택된 목록에서 value 찾기
+        let result = parseInt(0);
+        let len = list_.length;
+        let check=false;
+        buyStuff.innerHTML='';
+        for (let i=0;i<len;i++){
+            element=list_.item(i)
+            if (element.checked)
+            {
+            let hidden_val=document.createElement('input');
+            hidden_val.setAttribute("type", "hidden");
+            hidden_val.value=element.name;
+            hidden_val.name=element.name;
+            hidden_val.checked=true;
+            buyStuff.appendChild(hidden_val);
+            result+=parseInt(element.value)
+            check=true
+            }
+            }
+        
+        // 출력
+        document.getElementById('sum').innerText
+          = result;
+      }
+      window.onload=function(){
+        getCheckboxValue()
+      }
+    </script>
     {% if stuffs %}
 <div class="card">
   <div class="card-header">
@@ -26,18 +61,12 @@
         <tbody>
             {% for stuff in stuffs %}
           <tr>
-            {% if stuff.checked %}
             <th scope="row"><div class="form-check">
-                <input class="form-check-input " type="checkbox" value="" id="flexCheckDefault" checked>
-              </div></th>
-            {%else%}
-            <th scope="row"><div class="form-check">
-                <input class="form-check-input " type="checkbox" value="" id="flexCheckDefault">
-              </div></th>
-            {% endif %}
+                    <input class="form-check-input" type="checkbox" name="{{stuff.stuffs.name}}" value="{% widthratio stuff.stuffs.price 1 stuff.quantity %}" id="flexCheckDefault" onclick=getCheckboxValue() checked>
+                </div></th>
             <th>{{forloop.counter}}</th>
             <td >{{ stuff.stuffs.name }}</td>
-            <td>{{stuff.stuffs.price}}</td>
+            <td>{{stuff.stuffs.price}}$</td>
             <td>{{ stuff.quantity}} </td>
         <td><form method="post" action="{% url 'mall:plusStuff' stuff.stuffs.id %}">
             {% csrf_token %}
@@ -53,16 +82,31 @@
         ➖
 </button>
         </form></td>
-            <td>{% widthratio stuff.stuffs.price 1 stuff.quantity %}</td>
+            <td>{% widthratio stuff.stuffs.price 1 stuff.quantity %}$</td>
             <td><form method="post" action="{% url 'mall:subCart' stuff.stuffs.id %}" >
                 {% csrf_token %}
                 <button class="card-link badge bg-secondary"> X </button>
             </form></td>
           </tr>
           {% endfor %}
+          <th scope="row"></th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><span id="sum"></span>$</td>
+          <td>                  
+            <form method="post" action="{% url 'mall:buy' %}">
+            {% csrf_token %}
+            <div id="buyStuff">
+
+            </div>
+              <button class="btn btn-primary">BUY</button>
+          </form></td>
+          
         </tbody>
       </table>
-      ALL: {{sum}}$
   </div>
 </div>
         {% else %}
@@ -74,5 +118,6 @@
 
   </div>
 </div>
+
     {% endif %}
 {% endblock %}

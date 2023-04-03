@@ -7,11 +7,11 @@
   <div class="card-body">
     <h5 class="card-title">username: {{username}}</h5>
       <h5 class="card-title">email: {{email}}</h5>
-{#    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>#}
   </div>
 </div>
 <p></p>
-{% if buyStuff %}
+{% if orderlists %}
+{% for orders in orderlists%}
 <div class="card">
   <div class="card-header">
     Order List
@@ -28,19 +28,22 @@
         </tr>
       </thead>
       <tbody>
-        {% for stuff in buyStuff%}
-        <th>{{forloop.counter}}</th>
-        <td>{{ stuff.stuffs.name }}</td>
-        <td>{{stuff.stuffs.price}}$</td>
-        <td>{{ stuff.quantity}} </td>
-        <td>{% widthratio stuff.stuffs.price 1 stuff.quantity %}$</td>
+        {% for order in orders %}
+        <tr>
+        <th scope="row">{{forloop.counter}}</th>
+        <td>{{ order.list.stuffs.name }}</td>
+        <td>{{order.list.stuffs.price}}$</td>
+        <td>{{ order.list.quantity}} </td>
+        <td>{% widthratio order.list.stuffs.price 1 order.list.quantity %}$</td>
+      </tr>{% endfor %}
         </tbody>
-  {% endfor %}
     </table>
-  PLEASE SEND {{total}}$ AT xxxx-xx-xxxxxxx Kakao Bank
+    <small class="text-muted">Ordered At {{orders.0.order_date}}</small><br>
+    <small class="text-muted">SEND {{0}}$</small> <br> 
+    <small class="text-muted">xxxx-xx-xxxxxxx Kakao Bank</small>
 </div>
 </div>
-
+{% endfor %}
 {% endif %}
 {% endblock %}
 

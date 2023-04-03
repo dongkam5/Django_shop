@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from .models import Stuff,Cart
+from .models import Stuff,Cart,Order
 from .forms import StuffForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -30,9 +30,16 @@ def register(request):
 
 @login_required(login_url='common:login')
 def info(request):
-    email=request.user.email
-    username=request.user.username
-    context={'username':username,'email':email}
+    orderlists=Order.objects.filter(user=request.user)
+    pub_times=[]
+    orders=[]
+    for orderlist in orderlists:
+        pub_times.append(orderlist.order_date)
+    pub_times=list(set(pub_times))
+    for pub_time in pub_times:
+        orderlists=Order.objects.filter(order_date=pub_time)
+        orders.append(orderlists)
+    context={'orderlists':orders,'username':request.user.username,'email':request.user.email}
     return render(request,'mall/info.html',context)
 
 @login_required(login_url='common:login')
@@ -40,7 +47,7 @@ def cart(request):
     uCart=Cart.objects.filter(user=request.user)
     stuffs=uCart
     context={'stuffs':stuffs}
-    return render(request,'mall/cart3.html',context)
+    return render(request,'mall/cart.html',context)
 
 @login_required(login_url='common:login')
 def addCart(request,stuff_id):
@@ -49,13 +56,11 @@ def addCart(request,stuff_id):
     for uCart2 in uCart:
         if uCart2.stuffs.id==stuff_id:
             uCart2.quantity+=1
-            uCart2.checked=True
             uCart2.save()
             break
     else:
         uCart2=Cart.objects.create(user=request.user,stuffs=stuff)
         uCart2.quantity+=1
-        uCart2.checked=True
         uCart2.save()
         
     return  redirect('mall:cart')
@@ -99,21 +104,18 @@ def buyAtIndex(request,stuff_id):
     for uCart2 in uCart:
         if uCart2.stuffs.id==stuff_id:
             uCart2.quantity+=1
-            uCart2.checked=True
             uCart2.save()
             break
     else:
         uCart2=Cart.objects.create(user=request.user,stuffs=stuff)
         uCart2.quantity+=1
-        uCart2.checked=True
         uCart2.save()
     return  redirect('mall:cart')
 
-
 @login_required(login_url='common:login')
 def buy(request):
-    total=0
-    buyStuff=[]
+    subtotal=0
+    order_date=datetime.now()
     if request.method == 'POST':
         uCarts=Cart.objects.filter(user=request.user)
         for uCart in uCarts:
@@ -121,14 +123,22 @@ def buy(request):
                 stuff_name = request.POST[uCart.stuffs.name]
                 stuff=Stuff.objects.get(name=stuff_name)
                 uCart=Cart.objects.get(user=request.user,stuffs=stuff)
-                total+=uCart.quantity*uCart.stuffs.price
-                buyStuff.append(uCart)
-        # for uCart in uCarts:
-        #     if request.POST[uCart.stuffs.name]:
-        #         stuff_value = request.POST[uCart.stuffs.name]
-        #         total+=int(stuff_value)
-        #         buyStuff.append(uCart)
-        context={'buyStuff':buyStuff,'total':total,'username':request.user.username,'email':request.user.email}
+                orderlist=Order.objects.create(user=request.user,list=uCart,order_date=order_date)
+                orderlist.save()
+                subtotal=uCart.quantity*uCart.stuffs.price
+                orderlist.subtotal=subtotal
+                orderlist.save()
+
+        orderlists=Order.objects.filter(user=request.user)
+        pub_times=[]
+        orders=[]
+        for orderlist in orderlists:
+            pub_times.append(orderlist.order_date)
+        pub_times=list(set(pub_times))
+        for pub_time in pub_times:
+            orderlists=Order.objects.filter(order_date=pub_time)
+            orders.append(orderlists)
+        context={'orderlists':orders,'username':request.user.username,'email':request.user.email}
     else:
         context={'username':request.user.username,'email':request.user.email}
     return  render(request,'mall/info.html',context)
