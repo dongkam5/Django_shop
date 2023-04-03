@@ -7,27 +7,46 @@
 - 주문/ 주문현황확인 기능 O
 - 개인 정보 확인 O
 - 회원가입 O
+
+
+<br>
+
+
 ![로그아웃홈화면](./screenshot/logout_home.png)
-- 홈 (로그아웃 상태)
- 
- ![홈화면](./screenshot/home.png)
- - 홈 (로그인 상태)
+홈 (로그아웃 상태)
 
- ![카트화면](./screenshot/cart.png)
- - 장바구니
 
- ![마이페이지](./screenshot/my.png)
- - 마이페이지
+<br>
 
+![홈화면](./screenshot/home.png)
+홈 (로그인 상태)
+
+<br>
+
+![카트화면](./screenshot/cart.png)
+장바구니
+
+<br>
+
+![마이페이지](./screenshot/my.png)
+마이페이지
+
+<br>
 
 ![로그인](./screenshot/login.png) 
-- 로그인
+로그인
+
+<br>
 
 ![상품등록](./screenshot/register.png)
-- 상품 등록
+상품 등록
+
+<br>
 
 ![회원가입](./screenshot/signup.png)
-- 회원가입
+회원가입
+
+<br>
 
 ## 문제
 - 주문취소 기능 추가
